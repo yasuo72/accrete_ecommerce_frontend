@@ -358,22 +358,6 @@ export default function Navbar() {
 
         {/* Mobile Nav Links */}
         <div className="py-2" />
-
-        {/* Mobile Categories */}
-        <div className="py-2">
-          <p className="px-6 py-2 text-xs font-semibold text-gray-400 uppercase">Categories</p>
-          {categories.map(cat => (
-            <Link
-              key={cat}
-              to={`/products?category=${encodeURIComponent(cat)}`}
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-between px-6 py-3 border-b border-gray-100 text-base text-black hover:bg-gray-50"
-            >
-              {cat}
-              <ChevronDown size={16} className="text-gray-400" />
-            </Link>
-          ))}
-        </div>
       </div>
 
       {/* Category Filter Drawer */}

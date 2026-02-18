@@ -81,20 +81,6 @@ export default function HomePage() {
     <div>
       {/* ── HERO ── */}
       <div className="flex flex-col xl:flex-row" style={{ minHeight: 300 }}>
-        {/* Sidebar - Desktop */}
-        <aside className="w-[220px] border-r border-gray-200 py-4 hidden xl:block flex-shrink-0">
-          {sidebarCats.map((cat, i) => (
-            <Link
-              key={cat}
-              to={`/products?category=${encodeURIComponent(cat)}`}
-              className="h-10 px-6 flex items-center justify-between cursor-pointer hover:bg-gray-50 hover:text-primary transition-colors text-sm"
-            >
-              <span>{cat}</span>
-              {(i === 0 || i === 1) && <span className="text-xs text-gray-400">›</span>}
-            </Link>
-          ))}
-        </aside>
-
         {/* Banner */}
         <div className="flex-1 relative overflow-hidden" style={{ background: current.color, minHeight: 300 }}>
           {/* Dark overlay for mobile */}
