@@ -101,7 +101,18 @@ export default function Navbar() {
             </button>
 
             {/* Logo */}
-            <Link to="/" className="text-xl sm:text-2xl font-bold text-black flex-shrink-0">Exclusive</Link>
+            <Link to="/" className="flex items-center gap-2 flex-shrink-0 group">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-primary to-primary-hover rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
+                <svg viewBox="0 0 24 24" className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                  <line x1="3" y1="6" x2="21" y2="6" />
+                  <path d="M16 10a4 4 0 0 1-8 0" />
+                </svg>
+              </div>
+              <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-black to-gray-700 bg-clip-text text-transparent">
+                Exclusive
+              </span>
+            </Link>
 
             {/* Nav Links - Desktop */}
             <ul className={`hidden lg:flex items-center gap-10 ${mobileMenuOpen ? 'pointer-events-none opacity-0' : ''}`} />
@@ -334,7 +345,16 @@ export default function Navbar() {
       {/* Mobile Menu Panel */}
       <div className={`fixed left-0 top-0 bottom-0 w-[280px] bg-white shadow-xl z-[300] transition-transform duration-300 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} overflow-y-auto overscroll-contain`}>
         <div className="p-4 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white z-10">
-          <Link to="/" className="text-xl font-bold text-black" onClick={() => setMobileMenuOpen(false)}>Exclusive</Link>
+          <Link to="/" className="flex items-center gap-2 flex-shrink-0" onClick={() => setMobileMenuOpen(false)}>
+            <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary-hover rounded-lg flex items-center justify-center shadow-md">
+              <svg viewBox="0 0 24 24" className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <path d="M16 10a4 4 0 0 1-8 0" />
+              </svg>
+            </div>
+            <span className="text-xl font-bold text-black">Exclusive</span>
+          </Link>
           <button onClick={() => setMobileMenuOpen(false)} className="p-2 text-black hover:text-primary btn-tactile">
             <X size={24} />
           </button>
@@ -357,7 +377,23 @@ export default function Navbar() {
         </form>
 
         {/* Mobile Nav Links */}
-        <div className="py-2" />
+        <div className="py-2">
+          <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center px-6 py-3 border-b border-gray-100 text-base text-black hover:bg-gray-50 hover:text-primary transition-colors">
+            Home
+          </Link>
+          <Link to="/products" onClick={() => setMobileMenuOpen(false)} className="flex items-center px-6 py-3 border-b border-gray-100 text-base text-black hover:bg-gray-50 hover:text-primary transition-colors">
+            Products
+          </Link>
+          <Link to="/cart" onClick={() => setMobileMenuOpen(false)} className="flex items-center px-6 py-3 border-b border-gray-100 text-base text-black hover:bg-gray-50 hover:text-primary transition-colors">
+            Cart
+          </Link>
+          <Link to="/wishlist" onClick={() => setMobileMenuOpen(false)} className="flex items-center px-6 py-3 border-b border-gray-100 text-base text-black hover:bg-gray-50 hover:text-primary transition-colors">
+            Wishlist
+          </Link>
+          <Link to="/account" onClick={() => setMobileMenuOpen(false)} className="flex items-center px-6 py-3 border-b border-gray-100 text-base text-black hover:bg-gray-50 hover:text-primary transition-colors">
+            My Account
+          </Link>
+        </div>
       </div>
 
       {/* Category Filter Drawer */}
