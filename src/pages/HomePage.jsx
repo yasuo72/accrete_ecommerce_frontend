@@ -1,13 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { ChevronLeft, ChevronRight, ChevronRight as ChevronRightIcon } from 'lucide-react'
+import { ArrowRight, ChevronLeft, ChevronRight, Headset, ShieldCheck, Truck } from 'lucide-react'
 import ProductCard from '../components/UI/ProductCard'
 import SectionHeader from '../components/UI/SectionHeader'
 import { flashSaleProducts, bestSellingProducts, exploreProducts, categories } from '../data/mockData'
 import useRevealOnScroll from '../hooks/useRevealOnScroll'
 
-// ── Countdown Timer ──────────────────────────────────────────
-function useCountdown(target) {
+function useCountdown() {
   const [time, setTime] = useState({ days: 3, hours: 23, minutes: 19, seconds: 56 })
   useEffect(() => {
     const id = setInterval(() => {
@@ -47,14 +46,10 @@ function TimeBlock({ value, label }) {
   )
 }
 
-// ── Hero Slider ──────────────────────────────────────────────
 const heroSlides = [
-  { id: 1, brand: '🍎 iPhone 14 Series', headline: 'Up to 10%\noff Voucher', color: '#000', img: 'https://images.unsplash.com/photo-1591337676887-a217a6970a8a?w=600&fit=crop' },
-  { id: 2, brand: '🎮 PS5 Series', headline: 'Up to 20%\noff Voucher', color: '#1a1a2e', img: 'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=600&fit=crop' },
+  { id: 1, brand: 'iPhone 14 Series', headline: 'Up to 10%\noff Voucher', color: '#000', img: 'https://images.unsplash.com/photo-1591337676887-a217a6970a8a?w=600&fit=crop' },
+  { id: 2, brand: 'PS5 Series', headline: 'Up to 20%\noff Voucher', color: '#1a1a2e', img: 'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=600&fit=crop' },
 ]
-
-// ── Sidebar Categories ───────────────────────────────────────
-const sidebarCats = ["Woman's Fashion", "Men's Fashion", "Electronics", "Home & Lifestyle", "Medicine", "Sports & Outdoor", "Baby's & Toys", "Groceries & Pets", "Health & Beauty"]
 
 export default function HomePage() {
   const time = useCountdown()
@@ -64,6 +59,9 @@ export default function HomePage() {
   const catsRef = useRef(null)
   const bestRef = useRef(null)
   const exploreRef = useRef(null)
+  const flashListRef = useRef(null)
+  const bestListRef = useRef(null)
+  const exploreListRef = useRef(null)
 
   useRevealOnScroll(flashRef)
   useRevealOnScroll(catsRef)
@@ -75,56 +73,67 @@ export default function HomePage() {
     return () => clearInterval(id)
   }, [])
 
+  const scrollRow = (rowRef, direction) => {
+    if (!rowRef.current) return
+    const amount = rowRef.current.clientWidth * 0.8
+    rowRef.current.scrollBy({ left: direction * amount, behavior: 'smooth' })
+  }
+
   const current = heroSlides[slide]
 
   return (
     <div>
-      {/* ── HERO ── */}
-      <div className="flex flex-col xl:flex-row" style={{ minHeight: 300 }}>
-        {/* Banner */}
-        <div className="flex-1 relative overflow-hidden" style={{ background: current.color, minHeight: 300 }}>
-          {/* Dark overlay for mobile */}
-          <div className="absolute inset-0 bg-black/30 sm:bg-transparent z-0" />
-          
+      <section className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-[88px] mt-4 sm:mt-6">
+        <div className="relative overflow-hidden rounded-xl sm:rounded-2xl shadow-xl border border-black/10 dark:border-white/10" style={{ background: current.color, minHeight: 320 }}>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/45 to-black/5 z-0" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_30%,rgba(219,68,68,0.25),transparent_45%)] z-0" />
+
           <div className="absolute inset-0 flex items-center px-6 sm:px-10 lg:px-16 z-10">
             <div className="w-full sm:w-auto text-center sm:text-left">
-              <p className="text-white/70 text-sm sm:text-base mb-2 sm:mb-3">{current.brand}</p>
-              <h1 className="text-white font-bold leading-tight whitespace-pre-line text-2xl sm:text-3xl lg:text-5xl">{current.headline}</h1>
+              <p className="text-white/80 text-sm sm:text-base mb-2 sm:mb-3">{current.brand}</p>
+              <h1 className="text-white font-bold leading-tight whitespace-pre-line text-3xl sm:text-4xl lg:text-5xl">{current.headline}</h1>
               <div className="mt-4 sm:mt-6 flex justify-center sm:justify-start">
                 <Link to="/products" className="inline-flex items-center gap-2 text-white border-b border-white pb-0.5 text-sm sm:text-base hover:text-primary hover:border-primary transition-colors">
-                  Shop Now →
+                  Shop Now <ArrowRight size={14} />
                 </Link>
               </div>
             </div>
           </div>
-          <img src={current.img} alt="hero" className="absolute right-0 top-0 h-full w-auto object-cover opacity-60 sm:opacity-80 hidden sm:block" />
-          
-          {/* Navigation Arrows - 44px touch targets */}
-          <button onClick={() => setSlide(s => (s - 1 + heroSlides.length) % heroSlides.length)}
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-10 sm:h-10 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors btn-tactile"
-            aria-label="Previous slide">
+          <img src={current.img} alt="hero" className="absolute right-0 top-0 h-full w-[46%] object-cover opacity-85 hidden sm:block" />
+
+          <button
+            onClick={() => setSlide(s => (s - 1 + heroSlides.length) % heroSlides.length)}
+            className="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 bg-white/15 backdrop-blur rounded-full flex items-center justify-center text-white hover:bg-white/25 transition-colors btn-tactile z-20"
+            aria-label="Previous slide"
+          >
             <ChevronLeft size={20} />
           </button>
-          <button onClick={() => setSlide(s => (s + 1) % heroSlides.length)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-10 sm:h-10 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors btn-tactile"
-            aria-label="Next slide">
+          <button
+            onClick={() => setSlide(s => (s + 1) % heroSlides.length)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 bg-white/15 backdrop-blur rounded-full flex items-center justify-center text-white hover:bg-white/25 transition-colors btn-tactile z-20"
+            aria-label="Next slide"
+          >
             <ChevronRight size={20} />
           </button>
-          
-          {/* Dots - 44px touch targets */}
+
           <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20">
             {heroSlides.map((_, i) => (
-              <button key={i} onClick={() => setSlide(i)}
-                className={`rounded-full transition-all w-11 h-11 flex items-center justify-center ${i === slide ? 'bg-primary' : 'bg-white/50'}`}
-                aria-label={`Go to slide ${i + 1}`}>
-                <span className="sr-only">Slide {i + 1}</span>
+              <button key={i} onClick={() => setSlide(i)} className="w-6 h-6 flex items-center justify-center" aria-label={`Go to slide ${i + 1}`}>
+                <span className={`w-2.5 h-2.5 rounded-full transition-all ${i === slide ? 'bg-primary scale-125' : 'bg-white/70'}`} />
               </button>
             ))}
           </div>
         </div>
-      </div>
 
-      {/* ── FLASH SALES ── */}
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
+          {['Free shipping over $140', 'New arrivals every week', 'Easy 30-day returns'].map((item) => (
+            <div key={item} className="h-10 rounded-lg bg-gray-100 dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 flex items-center justify-center text-xs sm:text-sm font-medium text-black dark:text-white/90">
+              {item}
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section ref={flashRef} className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-[88px] mt-10 sm:mt-16 lg:mt-20">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8">
           <div>
@@ -145,19 +154,19 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-          <div className="hidden sm:flex gap-2">
-            <button className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
+          <div className="flex gap-2">
+            <button onClick={() => scrollRow(flashListRef, -1)} className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-colors" aria-label="Scroll flash sales left">
               <ChevronLeft size={16} />
             </button>
-            <button className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
+            <button onClick={() => scrollRow(flashListRef, 1)} className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-colors" aria-label="Scroll flash sales right">
               <ChevronRight size={16} />
             </button>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+        <div ref={flashListRef} className="flex gap-3 sm:gap-4 lg:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 scrollbar-hide">
           {flashSaleProducts.map((p, idx) => (
-            <div key={p.id} style={{ animation: 'staggerIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both', animationDelay: `${Math.min(400, 50 + idx * 50)}ms` }}>
+            <div key={p.id} className="min-w-[170px] sm:min-w-[230px] lg:min-w-[280px] snap-start" style={{ animation: 'staggerIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both', animationDelay: `${Math.min(400, 50 + idx * 50)}ms` }}>
               <ProductCard product={p} />
             </div>
           ))}
@@ -170,27 +179,20 @@ export default function HomePage() {
 
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-[88px] mt-10 sm:mt-16 border-t border-gray-200" />
 
-      {/* ── BROWSE BY CATEGORY ── */}
       <section ref={catsRef} className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-[88px] mt-10 sm:mt-16">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8">
           <div className="min-w-0">
             <SectionHeader tag="Categories" title="Browse By Category" />
           </div>
-          <div className="hidden sm:flex gap-2">
-            <button className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
-              <ChevronLeft size={16} />
-            </button>
-            <button className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
-              <ChevronRight size={16} />
-            </button>
-          </div>
         </div>
         <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-3 lg:gap-4">
           {categories.map((cat, i) => (
-            <Link key={cat.id} to={`/products?category=${cat.name}`}
+            <Link
+              key={cat.id}
+              to={`/products?category=${cat.name}`}
               onClick={() => setActiveCat(i)}
-              className={`flex flex-col items-center justify-center gap-2 sm:gap-3 min-h-24 sm:min-h-32 lg:min-h-36 border rounded-lg cursor-pointer transition-all p-3 sm:p-2
-                ${activeCat === i ? 'bg-primary border-primary text-white' : 'bg-white border-gray-200 text-black hover:border-primary'}`}>
+              className={`flex flex-col items-center justify-center gap-2 sm:gap-3 min-h-24 sm:min-h-32 lg:min-h-36 border rounded-lg cursor-pointer transition-all p-3 sm:p-2 ${activeCat === i ? 'bg-primary border-primary text-white' : 'bg-white border-gray-200 text-black hover:border-primary'}`}
+            >
               <span className="text-2xl sm:text-3xl lg:text-4xl">{cat.icon}</span>
               <span className="text-xs sm:text-sm font-medium text-center leading-tight break-words max-w-[90px] sm:max-w-none">{cat.name}</span>
             </Link>
@@ -200,22 +202,28 @@ export default function HomePage() {
 
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-[88px] mt-10 sm:mt-16 border-t border-gray-200" />
 
-      {/* ── BEST SELLING ── */}
-      <section className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-[88px] mt-10 sm:mt-16">
+      <section ref={bestRef} className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-[88px] mt-10 sm:mt-16">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8">
           <SectionHeader tag="This Month" title="Best Selling Products" />
-          <Link to="/products" className="bg-primary text-white px-6 sm:px-8 py-2 sm:py-3 text-xs sm:text-sm rounded hover:bg-primary-hover transition-colors btn-tactile btn-shadow-lift btn-primary-glow">View All</Link>
+          <div className="flex items-center gap-2">
+            <button onClick={() => scrollRow(bestListRef, -1)} className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-colors" aria-label="Scroll best selling left">
+              <ChevronLeft size={16} />
+            </button>
+            <button onClick={() => scrollRow(bestListRef, 1)} className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-colors" aria-label="Scroll best selling right">
+              <ChevronRight size={16} />
+            </button>
+            <Link to="/products" className="bg-primary text-white px-6 sm:px-8 py-2 sm:py-3 text-xs sm:text-sm rounded hover:bg-primary-hover transition-colors btn-tactile btn-shadow-lift btn-primary-glow">View All</Link>
+          </div>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+        <div ref={bestListRef} className="flex gap-3 sm:gap-4 lg:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 scrollbar-hide">
           {bestSellingProducts.map((p, idx) => (
-            <div key={p.id} style={{ animation: 'staggerIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both', animationDelay: `${Math.min(400, 50 + idx * 50)}ms` }}>
+            <div key={p.id} className="min-w-[170px] sm:min-w-[230px] lg:min-w-[280px] snap-start" style={{ animation: 'staggerIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both', animationDelay: `${Math.min(400, 50 + idx * 50)}ms` }}>
               <ProductCard product={p} />
             </div>
           ))}
         </div>
       </section>
 
-      {/* ── MUSIC PROMO BANNER ── */}
       <section className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-[88px] mt-10 sm:mt-16 lg:mt-20">
         <div className="bg-black rounded-lg sm:rounded-xl relative overflow-hidden flex flex-col sm:flex-row items-center px-6 sm:px-10 lg:px-16 py-10 sm:py-16 lg:py-20 gap-6 sm:gap-0">
           <div className="z-10 max-w-md text-center sm:text-left">
@@ -233,30 +241,25 @@ export default function HomePage() {
               Buy Now!
             </Link>
           </div>
-          <img
-            src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=500&fit=crop"
-            alt="JBL Speaker"
-            className="w-40 sm:w-auto sm:absolute sm:right-10 lg:right-16 h-32 sm:h-48 lg:h-72 object-contain drop-shadow-2xl"
-          />
+          <img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=500&fit=crop" alt="JBL Speaker" className="w-40 sm:w-auto sm:absolute sm:right-10 lg:right-16 h-32 sm:h-48 lg:h-72 object-contain drop-shadow-2xl" />
         </div>
       </section>
 
-      {/* ── EXPLORE PRODUCTS ── */}
-      <section className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-[88px] mt-10 sm:mt-16 lg:mt-20">
+      <section ref={exploreRef} className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-[88px] mt-10 sm:mt-16 lg:mt-20">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8">
           <SectionHeader tag="Our Products" title="Explore Our Products" />
-          <div className="hidden sm:flex gap-2">
-            <button className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
+          <div className="flex gap-2">
+            <button onClick={() => scrollRow(exploreListRef, -1)} className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-colors" aria-label="Scroll explore products left">
               <ChevronLeft size={16} />
             </button>
-            <button className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
+            <button onClick={() => scrollRow(exploreListRef, 1)} className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-colors" aria-label="Scroll explore products right">
               <ChevronRight size={16} />
             </button>
           </div>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+        <div ref={exploreListRef} className="flex gap-3 sm:gap-4 lg:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 scrollbar-hide">
           {exploreProducts.map((p, idx) => (
-            <div key={p.id} style={{ animation: 'staggerIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both', animationDelay: `${Math.min(400, 50 + idx * 50)}ms` }}>
+            <div key={p.id} className="min-w-[170px] sm:min-w-[230px] lg:min-w-[280px] snap-start" style={{ animation: 'staggerIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both', animationDelay: `${Math.min(400, 50 + idx * 50)}ms` }}>
               <ProductCard product={p} />
             </div>
           ))}
@@ -266,47 +269,38 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── NEW ARRIVAL ── */}
       <section className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-[88px] mt-10 sm:mt-16 lg:mt-20">
         <SectionHeader tag="Featured" title="New Arrival" />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 auto-rows-[200px] sm:auto-rows-[280px] lg:auto-rows-[300px]">
-          {/* Large Left */}
           <div className="relative bg-black rounded-lg sm:rounded-xl overflow-hidden row-span-1 sm:row-span-2 flex items-end p-4 sm:p-6 lg:p-8 min-h-[200px] sm:min-h-[400px] lg:min-h-[600px]">
-            <img src="https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=600&fit=crop" alt="PS5"
-              className="absolute inset-0 w-full h-full object-cover opacity-60" />
+            <img src="https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=600&fit=crop" alt="PS5" className="absolute inset-0 w-full h-full object-cover opacity-60" />
             <div className="relative z-10">
               <h3 className="text-white font-bold text-lg sm:text-xl lg:text-2xl">PlayStation 5</h3>
               <p className="text-white/70 text-xs sm:text-sm mt-1 mb-2 sm:mb-3">Black and White version of the PS5 coming out on sale.</p>
               <Link to="/products/17" className="text-white border-b border-white hover:text-primary hover:border-primary text-xs sm:text-sm transition-colors">Shop Now</Link>
             </div>
           </div>
-          
-          {/* Right Column */}
+
           <div className="flex flex-col gap-4 sm:gap-6">
-            {/* Right top */}
             <div className="relative bg-[#D2A885] rounded-lg sm:rounded-xl overflow-hidden flex items-end p-4 sm:p-6 flex-1 min-h-[150px] sm:min-h-[180px]">
-              <img src="https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=400&fit=crop" alt="Women"
-                className="absolute right-0 bottom-0 h-full object-cover opacity-80" />
+              <img src="https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=400&fit=crop" alt="Women" className="absolute right-0 bottom-0 h-full object-cover opacity-80" />
               <div className="relative z-10">
                 <h3 className="font-bold text-base sm:text-xl">Women's Collections</h3>
                 <p className="text-xs sm:text-sm text-black/70 mt-1 mb-2">Featured woman collections</p>
                 <Link to="/products?category=Woman's Fashion" className="text-xs sm:text-sm border-b border-black hover:text-primary hover:border-primary transition-colors">Shop Now</Link>
               </div>
             </div>
-            
-            {/* Right bottom grid */}
+
             <div className="grid grid-cols-2 gap-4 sm:gap-6 flex-1">
               <div className="relative bg-black rounded-lg sm:rounded-xl overflow-hidden flex items-end p-3 sm:p-4 min-h-[100px] sm:min-h-[120px]">
-                <img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=300&fit=crop" alt="Speaker"
-                  className="absolute inset-0 w-full h-full object-cover opacity-60" />
+                <img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=300&fit=crop" alt="Speaker" className="absolute inset-0 w-full h-full object-cover opacity-60" />
                 <div className="relative z-10">
                   <h3 className="text-white font-bold text-sm sm:text-base">Speakers</h3>
                   <Link to="/products?category=Electronics" className="text-white/80 text-xs border-b border-white/50">Shop Now</Link>
                 </div>
               </div>
               <div className="relative bg-[#D4C4A8] rounded-lg sm:rounded-xl overflow-hidden flex items-end p-3 sm:p-4 min-h-[100px] sm:min-h-[120px]">
-                <img src="https://images.unsplash.com/photo-1541643600914-78b084683702?w=300&fit=crop" alt="Perfume"
-                  className="absolute inset-0 w-full h-full object-cover opacity-70" />
+                <img src="https://images.unsplash.com/photo-1541643600914-78b084683702?w=300&fit=crop" alt="Perfume" className="absolute inset-0 w-full h-full object-cover opacity-70" />
                 <div className="relative z-10">
                   <h3 className="font-bold text-sm sm:text-base">Perfume</h3>
                   <Link to="/products?category=Health & Beauty" className="text-black/70 text-xs border-b border-black/50">Shop Now</Link>
@@ -317,19 +311,50 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── SERVICE FEATURES ── */}
+      <section className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-[88px] mt-10 sm:mt-16 lg:mt-20">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-5 sm:gap-6">
+          <div className="ui-3d-card rounded-xl border border-gray-200 dark:border-slate-700 bg-white/90 dark:bg-slate-900/70 p-6 sm:p-8 overflow-hidden">
+            <div className="ui-3d-layer relative">
+              <p className="text-xs uppercase tracking-[0.22em] text-primary mb-3">Style Grid</p>
+              <h3 className="text-2xl sm:text-3xl font-bold text-black dark:text-white leading-tight">Build a full setup, not just a single product.</h3>
+              <p className="mt-3 text-sm sm:text-base text-gray-600 dark:text-slate-300 max-w-xl">Mix electronics, fashion, and accessories with one-click add bundles for a faster checkout experience.</p>
+              <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {['4K Displays', 'Audio Gear', 'Streetwear', 'Home Decor'].map(tag => (
+                  <span key={tag} className="h-9 px-3 rounded-lg bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-xs sm:text-sm font-medium text-black dark:text-white flex items-center justify-center">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="ui-3d-card rounded-xl border border-gray-200 dark:border-slate-700 bg-gradient-to-br from-[#111827] to-[#2b1220] p-6 sm:p-8 text-white overflow-hidden">
+            <div className="ui-3d-layer relative">
+              <p className="text-xs uppercase tracking-[0.22em] text-white/75 mb-3">Member Perk</p>
+              <h3 className="text-2xl sm:text-3xl font-bold leading-tight">Unlock private drops and faster delivery lanes.</h3>
+              <p className="mt-3 text-sm sm:text-base text-white/80">Create an account to get early launch notifications, saved bundles, and express order routing.</p>
+              <div className="mt-6">
+                <Link to="/sign-up" className="inline-flex items-center gap-2 h-11 px-5 rounded-lg bg-primary text-white font-semibold hover:bg-primary-hover transition-colors btn-tactile">
+                  Join Free <ArrowRight size={16} />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-[88px] mt-10 sm:mt-16 lg:mt-20 mb-10 sm:mb-16 lg:mb-20 border-t border-gray-200 pt-8 sm:pt-12 lg:pt-16">
         <div className="flex flex-col sm:flex-row justify-center gap-6 sm:gap-8 lg:gap-20">
           {[
-            { icon: '🚚', title: 'FREE AND FAST DELIVERY', sub: 'Free delivery for all orders over $140' },
-            { icon: '🎧', title: '24/7 CUSTOMER SERVICE', sub: 'Friendly 24/7 customer support' },
-            { icon: '🛡', title: 'MONEY BACK GUARANTEE', sub: 'We return money within 30 days' },
-          ].map(({ icon, title, sub }) => (
+            { Icon: Truck, title: 'FREE AND FAST DELIVERY', sub: 'Free delivery for all orders over $140' },
+            { Icon: Headset, title: '24/7 CUSTOMER SERVICE', sub: 'Friendly 24/7 customer support' },
+            { Icon: ShieldCheck, title: 'MONEY BACK GUARANTEE', sub: 'We return money within 30 days' },
+          ].map(({ Icon, title, sub }) => (
             <div key={title} className="flex flex-col items-center gap-2 sm:gap-3 text-center">
               <div className="relative w-12 h-12 sm:w-14 sm:h-14">
                 <div className="absolute inset-0 border-2 border-black rounded-full" />
                 <div className="absolute inset-1 bg-black rounded-full flex items-center justify-center">
-                  <span className="text-lg sm:text-xl">{icon}</span>
+                  <Icon size={18} className="text-white" />
                 </div>
               </div>
               <h4 className="font-bold text-xs sm:text-sm lg:text-base uppercase tracking-wide">{title}</h4>

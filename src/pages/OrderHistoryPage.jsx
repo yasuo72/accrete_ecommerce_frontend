@@ -26,7 +26,7 @@ export default function OrderHistoryPage() {
 
           <div className="space-y-2">
             {sampleOrders.map(order => (
-              <div key={order.id} className="grid grid-cols-[2fr_1fr_1fr_1fr_1.5fr] px-4 py-4 border border-gray-100 rounded items-center hover:bg-gray-50 transition-colors">
+              <div key={order.id} className="grid grid-cols-[2fr_1fr_1fr_1fr_1.5fr] px-4 py-4 border border-gray-100 dark:border-slate-600 rounded items-center hover:bg-gray-50 dark:hover:bg-[#3d434f] transition-colors">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-gray-100 rounded flex-shrink-0 flex items-center justify-center overflow-hidden">
                     <img src={order.items[0].image} alt="" className="max-w-full max-h-full object-contain" />
@@ -42,8 +42,10 @@ export default function OrderHistoryPage() {
                 </span>
                 <span className="text-sm font-semibold">${order.total.toLocaleString()}</span>
                 <div className="flex gap-2">
-                  <Link to={`/account/orders/${order.id}`}
-                    className="h-8 px-4 border border-black rounded text-xs font-medium flex items-center hover:bg-black hover:text-white transition-all">
+                  <Link
+                    to={`/account/orders/${order.id}`}
+                    className="h-8 px-4 border border-black dark:border-slate-500 rounded text-xs font-medium flex items-center hover:bg-black dark:hover:bg-slate-700 hover:text-white transition-all"
+                  >
                     View Details
                   </Link>
                   {order.status === 'Delivered' && (

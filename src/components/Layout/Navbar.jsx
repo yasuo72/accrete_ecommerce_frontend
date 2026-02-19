@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom'
-import { Menu, X, Search, Heart, ShoppingCart, User, ChevronDown, Moon, Sun, SlidersHorizontal } from 'lucide-react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Menu, X, Search, Heart, ShoppingCart, User, ChevronDown, Moon, Sun, SlidersHorizontal, Home, Package, BadgeDollarSign } from 'lucide-react'
 import { useCart } from '../../context/CartContext'
 import { useWishlist } from '../../context/WishlistContext'
 import { useAuth } from '../../context/AuthContext'
@@ -72,19 +72,28 @@ export default function Navbar() {
     setSearch('')
   }
 
-  const navLinks = []
-
   const categories = [
     "Woman's Fashion", "Men's Fashion", 'Electronics', 'Home & Lifestyle',
     'Medicine', 'Sports & Outdoor', "Baby's & Toys", 'Groceries & Pets', 'Health & Beauty'
   ]
 
   const searchScopes = ['All', ...categories]
+  const mobileLinks = [
+    { to: '/', label: 'Home', icon: Home },
+    { to: '/products', label: 'Products', icon: Package },
+    { to: '/cart', label: 'Cart', icon: ShoppingCart },
+    { to: '/wishlist', label: 'Wishlist', icon: Heart },
+    { to: '/account', label: 'My Account', icon: User },
+  ]
+  const isActiveMobileLink = (to) => {
+    if (to === '/') return location.pathname === '/'
+    return location.pathname.startsWith(to)
+  }
 
   return (
     <>
       {/* Fixed Header */}
-      <nav className="fixed top-0 left-0 right-0 z-[100] bg-white border-b border-gray-200">
+      <nav className="fixed top-0 left-0 right-0 z-[100] bg-white dark:bg-[#353943] border-b border-gray-200 dark:border-[#545b67]">
         <div className={`${scrolled ? 'nav-glass' : ''}`}>
           <div className="max-w-[1440px] mx-auto px-3 sm:px-6 lg:px-[88px] h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4 flex-nowrap">
             {/* Mobile Menu Button */}
@@ -109,7 +118,7 @@ export default function Navbar() {
                   <path d="M16 10a4 4 0 0 1-8 0" />
                 </svg>
               </div>
-              <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-black to-gray-700 bg-clip-text text-transparent">
+              <span className="text-lg sm:text-xl font-bold text-black dark:text-white">
                 Exclusive
               </span>
             </Link>
@@ -125,20 +134,20 @@ export default function Navbar() {
                   <button
                     type="button"
                     onClick={() => setSearchScopeOpen(o => !o)}
-                    className="h-10 px-2 text-sm bg-gray-100 border border-gray-200 rounded-l-md outline-none focus:ring-1 focus:ring-primary inline-flex items-center gap-1 w-[72px] justify-between"
+                    className="h-10 px-2 text-sm bg-gray-100 dark:bg-[#3f4450] border border-gray-200 dark:border-[#5b6370] rounded-l-md outline-none focus:ring-1 focus:ring-primary inline-flex items-center gap-1 w-[72px] justify-between"
                     aria-label="Search category"
                   >
                     <span className="truncate">{searchScope}</span>
                     <ChevronDown size={16} className="text-gray-500" />
                   </button>
                   {searchScopeOpen && (
-                    <div className="absolute left-0 top-[calc(100%+6px)] w-56 max-h-72 overflow-auto bg-white border border-gray-200 rounded-md shadow-lg z-[400]">
+                    <div className="absolute left-0 top-[calc(100%+6px)] w-56 max-h-72 overflow-auto bg-white dark:bg-[#3f4450] border border-gray-200 dark:border-[#5b6370] rounded-md shadow-lg z-[400]">
                       {searchScopes.map(s => (
                         <button
                           key={s}
                           type="button"
                           onClick={() => { setSearchScope(s); setSearchScopeOpen(false) }}
-                          className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-50 ${searchScope === s ? 'text-primary font-semibold' : 'text-black'}`}
+                          className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-slate-700/40 ${searchScope === s ? 'text-primary font-semibold' : 'text-black'}`}
                         >
                           {s}
                         </button>
@@ -151,7 +160,7 @@ export default function Navbar() {
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Search products"
-                  className="flex-1 h-10 px-4 text-sm bg-white border-y border-gray-200 outline-none focus:ring-1 focus:ring-primary"
+                  className="flex-1 h-10 px-4 text-sm bg-white dark:bg-[#3f4450] border-y border-gray-200 dark:border-[#5b6370] outline-none focus:ring-1 focus:ring-primary"
                 />
                 <button
                   type="submit"
@@ -256,27 +265,27 @@ export default function Navbar() {
           </div>
 
           {/* Search - Mobile (full-width row) */}
-          <div className={`lg:hidden border-t border-gray-200 bg-white ${isHomePage ? '' : 'hidden'}`}>
+          <div className={`lg:hidden border-t border-gray-200 dark:border-[#545b67] bg-white dark:bg-[#353943] ${isHomePage ? '' : 'hidden'}`}>
             <div className="max-w-[1440px] mx-auto px-3 sm:px-6">
               <form onSubmit={handleSearch} className="py-2 flex items-stretch">
                 <div className="relative" ref={searchScopeRef}>
                   <button
                     type="button"
                     onClick={() => setSearchScopeOpen(o => !o)}
-                    className="h-10 px-2 text-xs bg-gray-100 border border-gray-200 rounded-l-md outline-none focus:ring-1 focus:ring-primary inline-flex items-center gap-1 w-[64px] justify-between"
+                    className="h-10 px-2 text-xs bg-gray-100 dark:bg-[#3f4450] border border-gray-200 dark:border-[#5b6370] rounded-l-md outline-none focus:ring-1 focus:ring-primary inline-flex items-center gap-1 w-[64px] justify-between"
                     aria-label="Search category"
                   >
                     <span className="truncate">{searchScope}</span>
                     <ChevronDown size={14} className="text-gray-500" />
                   </button>
                   {searchScopeOpen && (
-                    <div className="absolute left-0 top-[calc(100%+6px)] w-56 max-h-72 overflow-auto bg-white border border-gray-200 rounded-md shadow-lg z-[400]">
+                    <div className="absolute left-0 top-[calc(100%+6px)] w-56 max-h-72 overflow-auto bg-white dark:bg-[#3f4450] border border-gray-200 dark:border-[#5b6370] rounded-md shadow-lg z-[400]">
                       {searchScopes.map(s => (
                         <button
                           key={s}
                           type="button"
                           onClick={() => { setSearchScope(s); setSearchScopeOpen(false) }}
-                          className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-50 ${searchScope === s ? 'text-primary font-semibold' : 'text-black'}`}
+                          className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-slate-700/40 ${searchScope === s ? 'text-primary font-semibold' : 'text-black'}`}
                         >
                           {s}
                         </button>
@@ -289,7 +298,7 @@ export default function Navbar() {
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Search"
-                  className="flex-1 h-10 px-3 text-sm bg-white border-y border-gray-200 outline-none focus:ring-1 focus:ring-primary"
+                  className="flex-1 h-10 px-3 text-sm bg-white dark:bg-[#3f4450] border-y border-gray-200 dark:border-[#5b6370] outline-none focus:ring-1 focus:ring-primary"
                 />
                 <button
                   type="submit"
@@ -304,7 +313,7 @@ export default function Navbar() {
         </div>
 
         {isHomePage && (
-          <div className={`border-b border-gray-200 bg-white transition-all duration-300 ${scrolled ? 'opacity-0 max-h-0 overflow-hidden border-0' : 'opacity-100'}`}>
+          <div className={`border-b border-gray-200 dark:border-[#545b67] bg-white dark:bg-[#353943] transition-all duration-300 ${scrolled ? 'opacity-0 max-h-0 overflow-hidden border-0' : 'opacity-100'}`}>
             <div className="max-w-[1440px] mx-auto px-3 sm:px-6 lg:px-[88px] h-11 flex items-center">
               <div className="flex items-center gap-2 sm:gap-4 overflow-x-auto whitespace-nowrap w-full scrollbar-hide">
                 {categories.map(cat => (
@@ -312,7 +321,7 @@ export default function Navbar() {
                     key={cat}
                     type="button"
                     onClick={() => navigate(`/products?category=${encodeURIComponent(cat)}`)}
-                    className="h-8 px-3 rounded text-xs sm:text-sm font-medium text-black/80 hover:text-primary hover:bg-gray-50 transition-colors flex-shrink-0"
+                    className="h-8 px-3 rounded text-xs sm:text-sm font-medium text-black dark:text-white/85 hover:text-primary hover:bg-gray-50 dark:hover:bg-slate-700/40 transition-colors flex-shrink-0"
                   >
                     {cat}
                   </button>
@@ -329,7 +338,7 @@ export default function Navbar() {
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-[299]"
+          className="fixed inset-0 bg-black/60 backdrop-blur-[2px] z-[299]"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
@@ -343,8 +352,8 @@ export default function Navbar() {
       )}
 
       {/* Mobile Menu Panel */}
-      <div className={`fixed left-0 top-0 bottom-0 w-[280px] bg-white shadow-xl z-[300] transition-transform duration-300 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} overflow-y-auto overscroll-contain`}>
-        <div className="p-4 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white z-10">
+      <div className={`fixed left-0 top-0 bottom-0 w-[300px] bg-[rgba(255,255,255,0.96)] dark:bg-[rgba(15,23,42,0.96)] border-r border-gray-200 dark:border-slate-700 shadow-2xl z-[300] transition-transform duration-300 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} overflow-y-auto overscroll-contain`}>
+        <div className="p-4 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between sticky top-0 bg-[rgba(255,255,255,0.94)] dark:bg-[rgba(15,23,42,0.94)] backdrop-blur-md z-10">
           <Link to="/" className="flex items-center gap-2 flex-shrink-0" onClick={() => setMobileMenuOpen(false)}>
             <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary-hover rounded-lg flex items-center justify-center shadow-md">
               <svg viewBox="0 0 24 24" className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -355,20 +364,20 @@ export default function Navbar() {
             </div>
             <span className="text-xl font-bold text-black">Exclusive</span>
           </Link>
-          <button onClick={() => setMobileMenuOpen(false)} className="p-2 text-black hover:text-primary btn-tactile">
+          <button onClick={() => setMobileMenuOpen(false)} className="p-2 text-black hover:text-primary btn-tactile rounded-md hover:bg-gray-100 dark:hover:bg-slate-800">
             <X size={24} />
           </button>
         </div>
 
         {/* Mobile Search */}
-        <form onSubmit={handleSearch} className="p-4 border-b border-gray-200 sticky top-[64px] bg-white z-10">
+        <form onSubmit={handleSearch} className="p-4 border-b border-gray-200 dark:border-slate-700 sticky top-[64px] bg-[rgba(255,255,255,0.94)] dark:bg-[rgba(15,23,42,0.94)] backdrop-blur-md z-10">
           <div className="relative">
             <input
               type="text"
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search..."
-              className="w-full h-10 bg-gray-100 rounded px-4 pr-10 text-sm outline-none input-focus-glow"
+              className="w-full h-10 bg-gray-100 dark:bg-slate-800 rounded px-4 pr-10 text-sm outline-none input-focus-glow"
             />
             <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 btn-tactile">
               <Search size={18} />
@@ -377,22 +386,34 @@ export default function Navbar() {
         </form>
 
         {/* Mobile Nav Links */}
-        <div className="py-2">
-          <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center px-6 py-3 border-b border-gray-100 text-base text-black hover:bg-gray-50 hover:text-primary transition-colors">
-            Home
-          </Link>
-          <Link to="/products" onClick={() => setMobileMenuOpen(false)} className="flex items-center px-6 py-3 border-b border-gray-100 text-base text-black hover:bg-gray-50 hover:text-primary transition-colors">
-            Products
-          </Link>
-          <Link to="/cart" onClick={() => setMobileMenuOpen(false)} className="flex items-center px-6 py-3 border-b border-gray-100 text-base text-black hover:bg-gray-50 hover:text-primary transition-colors">
-            Cart
-          </Link>
-          <Link to="/wishlist" onClick={() => setMobileMenuOpen(false)} className="flex items-center px-6 py-3 border-b border-gray-100 text-base text-black hover:bg-gray-50 hover:text-primary transition-colors">
-            Wishlist
-          </Link>
-          <Link to="/account" onClick={() => setMobileMenuOpen(false)} className="flex items-center px-6 py-3 border-b border-gray-100 text-base text-black hover:bg-gray-50 hover:text-primary transition-colors">
-            My Account
-          </Link>
+        <div className="py-3 px-3">
+          <p className="px-3 pb-2 text-xs font-semibold tracking-wide uppercase text-gray-500 dark:text-slate-400">Navigation</p>
+          <div className="space-y-1">
+            {mobileLinks.map(({ to, label, icon: Icon }) => (
+              <Link
+                key={to}
+                to={to}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
+                  isActiveMobileLink(to)
+                    ? 'bg-primary text-white'
+                    : 'text-black dark:text-white hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-primary'
+                }`}
+              >
+                <Icon size={17} />
+                <span className="font-medium">{label}</span>
+              </Link>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => { navigate('/products?sale=true'); setMobileMenuOpen(false) }}
+            className="w-full mt-4 px-3 py-2.5 rounded-lg bg-black text-white dark:bg-primary/90 flex items-center justify-center gap-2 text-sm font-semibold hover:opacity-90 transition-opacity"
+          >
+            <BadgeDollarSign size={16} />
+            Today's Deals
+          </button>
         </div>
       </div>
 

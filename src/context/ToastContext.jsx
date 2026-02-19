@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react'
+import { CheckCircle2, X, XCircle } from 'lucide-react'
 
 const ToastContext = createContext(null)
 
@@ -37,12 +38,14 @@ export function ToastProvider({ children }) {
       <div className="fixed top-20 right-6 z-[500] flex flex-col gap-2">
         {toasts.map(t => (
           <div key={t.id} className={`bg-black text-white text-sm px-5 py-3 rounded-lg shadow-modal flex items-start gap-3 min-w-[280px] overflow-hidden ${t.leaving ? 'toast-out' : 'toast-in'}`}>
-            <span className={`${t.type === 'success' ? 'text-green-400' : 'text-red-400'} mt-0.5`}>{t.type === 'success' ? '✓' : '✕'}</span>
+            <span className={`${t.type === 'success' ? 'text-green-400' : 'text-red-400'} mt-0.5`}>
+              {t.type === 'success' ? <CheckCircle2 size={16} /> : <XCircle size={16} />}
+            </span>
             <div className="flex-1">
               <div className="flex items-start justify-between gap-3">
                 <span className="leading-snug">{t.message}</span>
                 <button type="button" onClick={() => dismiss(t.id)} className="text-white/70 hover:text-white btn-tactile" aria-label="Dismiss toast">
-                  ✕
+                  <X size={14} />
                 </button>
               </div>
               <div className="h-[3px] bg-white/15 mt-2 rounded overflow-hidden">

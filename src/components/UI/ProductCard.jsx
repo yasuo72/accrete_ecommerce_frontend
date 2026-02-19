@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { Eye, Heart } from 'lucide-react'
 import { useCart } from '../../context/CartContext'
 import { useWishlist } from '../../context/WishlistContext'
 import { useToast } from '../../context/ToastContext'
@@ -36,7 +37,6 @@ export default function ProductCard({ product, alwaysShowCart = false }) {
   }
 
   const handleMouseEnter = () => {
-    // Preload product detail page on hover
     if (!preloadedRef.current) {
       preloadedRef.current = true
       const link = document.createElement('link')
@@ -48,7 +48,6 @@ export default function ProductCard({ product, alwaysShowCart = false }) {
 
   return (
     <div className="group relative bg-white rounded-lg overflow-hidden shadow-card card-lift" onMouseEnter={handleMouseEnter}>
-      {/* Image Container */}
       <Link to={`/products/${product.id}`}>
         <div className="relative h-[200px] bg-gray-100 flex items-center justify-center overflow-hidden">
           {!imgLoaded && (
@@ -61,7 +60,6 @@ export default function ProductCard({ product, alwaysShowCart = false }) {
             className={`max-w-[80%] max-h-[80%] object-contain img-zoom transition-opacity duration-300 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
           />
 
-          {/* Badge */}
           {product.badge === 'sale' && (
             <span className="absolute top-3 left-3 bg-primary text-white text-xs font-semibold px-2.5 py-1 rounded">-{product.discount}%</span>
           )}
@@ -69,25 +67,28 @@ export default function ProductCard({ product, alwaysShowCart = false }) {
             <span className="absolute top-3 left-3 bg-[#00FF66] text-black text-xs font-semibold px-2.5 py-1 rounded">NEW</span>
           )}
 
-          {/* Hover Actions */}
           <div className="absolute top-3 right-3 flex flex-col gap-2">
             <button
               onClick={handleWishlist}
               className={`w-[34px] h-[34px] bg-white rounded-full flex items-center justify-center shadow hover:text-primary transition-colors btn-tactile btn-shadow-lift ${wishAnimKey ? 'heart-pulse' : ''}`}
               key={wishAnimKey}
+              aria-label="Toggle wishlist"
             >
-              {isWishlisted(product.id) ? '♥' : '♡'}
+              <Heart size={16} fill={isWishlisted(product.id) ? 'currentColor' : 'none'} />
             </button>
             <button
               type="button"
+              onClick={(e) => {
+                e.preventDefault()
+                navigate(`/products/${product.id}`)
+              }}
               className="w-[34px] h-[34px] bg-white rounded-full flex items-center justify-center shadow hover:text-primary transition-colors btn-tactile btn-shadow-lift"
               aria-label="View product"
             >
-              👁
+              <Eye size={16} />
             </button>
           </div>
 
-          {/* Add to Cart */}
           <button
             onClick={handleAddToCart}
             className={`absolute bottom-0 left-0 right-0 h-10 bg-black text-white text-sm font-medium hover:bg-primary btn-tactile
@@ -99,7 +100,6 @@ export default function ProductCard({ product, alwaysShowCart = false }) {
         </div>
       </Link>
 
-      {/* Product Info */}
       <div className="p-3">
         <Link to={`/products/${product.id}`}>
           <h3 className="text-base font-medium text-black hover:text-primary transition-colors truncate">{product.name}</h3>
@@ -114,7 +114,6 @@ export default function ProductCard({ product, alwaysShowCart = false }) {
           <StarRating rating={product.rating} size="sm" />
           <span className="text-xs text-gray-500">({product.reviews})</span>
         </div>
-        {/* Color Swatches */}
         {product.colors?.length > 0 && (
           <div className="flex gap-1.5 mt-2">
             {product.colors.map((c, i) => (

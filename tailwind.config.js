@@ -20,11 +20,18 @@ export default {
       maxWidth: {
         content: '1200px',
       },
+      borderRadius: {
+        DEFAULT: '0.65rem',
+        md: '0.75rem',
+        lg: '1rem',
+        xl: '1.25rem',
+        '2xl': '1.6rem',
+      },
       boxShadow: {
-        card: '0 2px 8px rgba(0,0,0,0.08)',
-        'card-hover': '0 4px 16px rgba(0,0,0,0.14)',
-        dropdown: '0 4px 16px rgba(0,0,0,0.12)',
-        modal: '0 8px 32px rgba(0,0,0,0.18)',
+        card: '0 10px 28px rgba(2, 6, 23, 0.12)',
+        'card-hover': '0 18px 42px rgba(2, 6, 23, 0.18)',
+        dropdown: '0 12px 32px rgba(2, 6, 23, 0.16)',
+        modal: '0 18px 52px rgba(2, 6, 23, 0.22)',
       },
     },
   },
